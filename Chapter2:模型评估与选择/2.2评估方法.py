@@ -40,14 +40,14 @@ X_scale = StandardScaler(X)
 s_precision = []
 ns_precision = []
 cross_precision = []
-#留出法
+
 def split_data(x,y,model):
     for i in range(10):
         x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,shuffle=True,stratify=y,random_state = i)#分层采样
         x_train1,x_test1,y_train1,y_test1 = train_test_split(x,y,test_size=0.2,shuffle=True,random_state = i)#随机采样
         m = model.fit(x_train,y_train)
         m1 = model.fit(x_train1,y_train1)
-        m2 = cross_val_score(model,x_train,y_train,scoring = 'accuracy',cv = 10)
+        m2 = cross_val_score(model,x_train,y_train,scoring = 'accuracy',cv = 10)#交叉验证
         cross_precision.append(np.mean(m2))
         y_hat = m.predict(x_test)
         y_hat1 = m1.predict(x_test1)
