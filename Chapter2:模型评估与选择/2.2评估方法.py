@@ -19,6 +19,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 import warnings
 warnings.filterwarnings("ignore")
 plt.rcParams['font.family'] = ['sans-serif']
@@ -40,14 +41,14 @@ X_scale = StandardScaler(X)
 s_precision = []
 ns_precision = []
 cross_precision = []
-
+#留出法
 def split_data(x,y,model):
     for i in range(10):
         x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,shuffle=True,stratify=y,random_state = i)#分层采样
         x_train1,x_test1,y_train1,y_test1 = train_test_split(x,y,test_size=0.2,shuffle=True,random_state = i)#随机采样
         m = model.fit(x_train,y_train)
         m1 = model.fit(x_train1,y_train1)
-        m2 = cross_val_score(model,x_train,y_train,scoring = 'accuracy',cv = 10)#交叉验证
+        m2 = cross_val_score(model,x_train,y_train,scoring = 'accuracy',cv = 10)
         cross_precision.append(np.mean(m2))
         y_hat = m.predict(x_test)
         y_hat1 = m1.predict(x_test1)
@@ -65,7 +66,7 @@ def split_data(x,y,model):
 s,ns,cr = split_data(X,y,LogisticRegression())
 
 
-# In[7]:
+# In[5]:
 
 
 def plot_accuracy(n,s,c):
@@ -81,7 +82,7 @@ def plot_accuracy(n,s,c):
     plt.show()
 
 
-# In[8]:
+# In[6]:
 
 
 plot_accuracy(s,ns,cr)
@@ -89,8 +90,64 @@ plot_accuracy(s,ns,cr)
 
 # # bootsttapping
 
+# In[7]:
 
 
 iris = pd.DataFrame(np.hstack((X,y[:,np.newaxis])))
-iris
+
+
+# In[8]:
+
+
+n = iris.shape[0]
+
+# np.random.seed(2) #设置随机种子，复现随机结果
+def generate_data(train_set):
+    for i in range(n):
+        train_set.append(int(np.random.random()*n))
+    return train_set
+
+
+# In[9]:
+
+
+bootstrapping_precision = []
+def bootstrapping(data):
+    for i in range(10):
+        train_set = []
+        train_set = generate_data(train_set)
+        train_data = data.iloc[train_set,:]
+        test_data = data.iloc[np.setdiff1d(data.index,train_data.index)]
+        print('未抽取的样本数{}'.format(test_data.shape[0]))
+        train_data_input,train_label_input = train_data.iloc[:,:4],train_data.iloc[:,4]
+        test_data_input,test_label_input = test_data.iloc[:,:4],test_data.iloc[:,4]
+        lr = LogisticRegression().fit(train_data_input.values,train_label_input.values)
+        y_hat2 = lr.predict(test_data_input.values)
+        acc = accuracy_score(test_label_input.values,y_hat2)
+        bootstrapping_precision.append(acc)
+    return bootstrapping_precision
+
+
+# In[10]:
+
+
+acc = bootstrapping(iris)
+acc
+
+
+# In[17]:
+
+
+def plot_bootstrappig(acc):
+    plt.figure(figsize=(20,5))
+    plt.plot(range(1,11),acc,label = '自主抽样')
+    plt.xlabel('X',fontsize=12)
+    plt.ylabel('Y',fontsize=12)
+    plt.legend(loc='best')
+    plt.show()
+
+plot_bootstrappig(acc)
+
+
+
 
