@@ -30,24 +30,15 @@ from sklearn.model_selection import train_test_split
 # In[2]:
 
 data,label = load_iris().data[50:150],load_iris().target[50:150]
+label
 
 
 # In[3]:
 
-label
-
-
-# In[4]:
-
-# help(f1_score)
-
-
-# In[5]:
-
 x_train,x_test,y_train,y_test = train_test_split(data,label,test_size = 0.3,random_state = 0)
 
 
-# In[6]:
+# In[4]:
 
 lr = LogisticRegression()
 lr.fit_transform(x_train,y_train)
@@ -59,11 +50,11 @@ print('计算的精度为%.5f'%acc_score)
 print('sklearn的精度为%.5f'%accuracy_score(y_test,y_hat))
 
 
-# In[10]:
+# In[5]:
 
 #计算混淆矩阵
 TP,FN,FP,TN = 0,0,0,0
-print(y_hat[0])
+# print(y_hat[0])
 for i in range(len(y_test)):
     if y_test[i] == y_hat[i] and y_test[i] == 1:
         TP += 1
@@ -79,19 +70,12 @@ r = TP/(TP+FN)
 F1 = 2*p*r/(p+r)
 
 #混淆矩阵
-print('计算值:',[TP ,FN ,FP ,TN],'\n')
+print('计算混淆矩阵:',[TP ,FN ,FP ,TN],'\n')
 print('sklearn 混淆矩阵:' , confusion_matrix(y_test,y_hat).ravel() ,'\n') #sklearn
 
 print('sklearn F1score = ',f1_score(y_test,y_hat,average=None))
 print('查准率= %.5f,查全率= %.5f,F1score= %.5f'%(p,r,F1))
 
-
-# In[11]:
-
-help(f1_score)
-
-
-# In[ ]:
 
 
 
