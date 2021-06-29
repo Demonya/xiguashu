@@ -14,7 +14,7 @@
 13、半监督学习\
 14、概率图模型\
 15、规则学习\
-16、强化学习
+16、强化学习\
 注：部分代码会借鉴《机器学习实践》，也会根据实际需要对代码进行调整。除此之外还可能会借鉴如下资源（仅做学习使用）：\
 1、https://www.bilibili.com/video/BV17J411C7zZ?from=search&seid=4917240840661625728 \
 2、https://www.bilibili.com/video/BV1Mh411e7VU?from=search&seid=4917240840661625728 \
