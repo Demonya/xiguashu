@@ -41,7 +41,7 @@ x_train,x_test,y_train,y_test = train_test_split(data,label,test_size = 0.3,rand
 # In[4]:
 
 lr = LogisticRegression()
-lr.fit_transform(x_train,y_train)
+lr.fit_transform(x_train,y_train) #sklearn不同版本对应的方法不同fit、fit_transform
 y_hat = lr.predict(x_test)
 diff = y_hat - y_test
 acc_score = len(diff[diff==0])/len(diff)
