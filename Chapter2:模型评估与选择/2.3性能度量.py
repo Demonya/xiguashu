@@ -26,8 +26,10 @@ import pandas as pd
 import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score,confusion_matrix,f1_score,precision_recall_curve,roc_curve
+from sklearn.metrics import accuracy_score,confusion_matrix,f1_score,precision_recall_curve
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve,plot_precision_recall_curve,average_precision_score
 
 
 # In[2]:
@@ -40,7 +42,7 @@ label
 # In[3]:
 
 
-x_train,x_test,y_train,y_test = train_test_split(data,label,test_size = 0.3,random_state = 0)
+x_train,x_test,y_train,y_test = train_test_split(data,label,test_size = 0.3,random_state = 66)
 
 
 # In[4]:
@@ -88,17 +90,20 @@ print('查准率= %.5f,查全率= %.5f,F1score= %.5f'%(p,r,F1))
 # In[6]:
 
 
-lr.predict_proba(x_test)[:,0]
-# y_test
+y_scores = lr.predict_proba(x_test)[:,1]
+y_test.dtype,y_scores.dtype
 # y_test.reshape(-1,1)
 
 
 # In[7]:
 
 
-p,r,th = precision_recall_curve(y_test,lr.predict_proba(x_test)[:,0])
-p,r,th
+p,r,th = precision_recall_curve(y_test,y_scores,pos_label=1)
 
+pr_curve = plot_precision_recall_curve(lr, x_test, y_test)
+average_precision = average_precision_score(y_test, y_scores)
+pr_curve.ax_.set_title('Precision-Recall curve: '
+                   '平均精度={0:0.2f}'.format(average_precision))
 
 
 
