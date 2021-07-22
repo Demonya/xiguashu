@@ -1,2 +1,2 @@
 
-〖log〗_2 p(x)
+\\sigma = \frac{a}{b}
